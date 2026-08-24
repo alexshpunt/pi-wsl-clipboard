@@ -74,6 +74,11 @@ npm run pack:dry
 The package contains only the extension source and public documentation. Tests
 stay out of the published tarball.
 
+
+## Release
+
+Maintainers can find the npm and GitHub Actions release steps in
+[RELEASING.md](RELEASING.md).
 ## License
 
 [MIT](LICENSE)
