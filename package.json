@@ -1,6 +1,6 @@
 {
   "name": "pi-wsl-clipboard",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Paste Windows clipboard text and images into Pi from WSL with Ctrl+V.",
   "type": "module",
   "files": [

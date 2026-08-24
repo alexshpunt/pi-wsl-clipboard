@@ -2,7 +2,7 @@ import { spawnSync } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { existsSync, readFileSync, unlinkSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, posix } from "node:path";
 
 const POWERSHELL_TIMEOUT_MS = 5000;
 const WSLPATH_TIMEOUT_MS = 1000;
@@ -69,22 +69,25 @@ function removeFile(path: string): void {
 }
 
 /**
- * Create a bridge to the native Windows clipboard from inside WSL.
+ * Create a bridge to the native Windows clipboard from WSL or native Windows.
  *
- * The optional runner is public so the PowerShell boundary can be tested
- * without requiring a Windows host.
+ * The optional runner and platform are public so the PowerShell boundary can
+ * be tested without requiring a Windows host.
  */
 export function createWindowsClipboardBridge(
   runner: CommandRunner = runCommand,
   fileExists: (path: string) => boolean = existsSync,
   temporaryDirectory: string = tmpdir(),
+  platform: NodeJS.Platform = process.platform,
 ): ClipboardBridge {
   return {
     readImage(): string | null {
-      const filePath = join(temporaryDirectory, `pi-wsl-clipboard-${randomUUID()}.png`);
-      const windowsPathResult = runner("wslpath", ["-w", filePath], {
-        timeout: WSLPATH_TIMEOUT_MS,
-      });
+      const filePath = platform === "win32"
+        ? join(temporaryDirectory, `pi-wsl-clipboard-${randomUUID()}.png`)
+        : posix.join(temporaryDirectory, `pi-wsl-clipboard-${randomUUID()}.png`);
+      const windowsPathResult = platform === "win32"
+        ? { status: 0, stdout: filePath, error: undefined }
+        : runner("wslpath", ["-w", filePath], { timeout: WSLPATH_TIMEOUT_MS });
       if (windowsPathResult.error || windowsPathResult.status !== 0) return null;
 
       const escapedPath = outputText(windowsPathResult).trim().replaceAll("'", "''");

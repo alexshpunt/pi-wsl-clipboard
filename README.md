@@ -1,6 +1,6 @@
 # pi-wsl-clipboard
 
-Paste the Windows clipboard into [Pi](https://pi.dev) when Pi runs inside WSL.
+Paste the Windows clipboard into [Pi](https://pi.dev) from WSL or native Windows.
 
 The extension owns `Ctrl+V` in Pi's editor. It checks the Windows clipboard for
 an image first, then falls back to Windows clipboard text.
@@ -27,14 +27,14 @@ Restart Pi or run `/reload` after installing or changing the extension.
 2. Focus the Pi prompt running in WSL.
 3. Press `Ctrl+V`.
 
-Images are saved as temporary PNG files in WSL and inserted into the prompt.
+Images are saved as temporary PNG files and inserted into the prompt.
 Text is inserted directly into the prompt.
 
 ## Requirements
 
-- WSL (WSL2 with WSLg works).
-- `powershell.exe` or `pwsh.exe` available from WSL.
-- `wslpath` available from WSL.
+- WSL (WSL2 with WSLg works) or native Windows.
+- `powershell.exe` or `pwsh.exe` available from the Pi process.
+- `wslpath` is required only when Pi runs inside WSL.
 - A terminal that sends `Ctrl+V` to Pi instead of handling it as its own paste action.
 
 For Windows Terminal, VS Code's integrated terminal, or another host terminal,

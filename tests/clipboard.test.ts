@@ -68,10 +68,21 @@ test("reads an image through WSL path conversion and PowerShell", () => {
     { status: 0, stdout: "C:\\tmp\\clipboard.png\n" },
     { status: 0, stdout: "ok" },
   ]);
-  const bridge = createWindowsClipboardBridge(runner.run, () => true, "/tmp");
+  const bridge = createWindowsClipboardBridge(runner.run, () => true, "/tmp", "linux");
 
   const imagePath = bridge.readImage();
   assert.match(imagePath ?? "", /^\/tmp\/pi-wsl-clipboard-/);
   assert.deepEqual(runner.calls.map((call) => call.command), ["wslpath", "powershell.exe"]);
   assert.match(runner.calls[1]?.args.at(-1) ?? "", /Clipboard\]::GetImage/);
+});
+
+test("reads an image without WSL path conversion on native Windows", () => {
+  const runner = fakeRunner([{ status: 0, stdout: "ok" }]);
+  const bridge = createWindowsClipboardBridge(runner.run, () => true, "C:\\Temp", "win32");
+
+  const imagePath = bridge.readImage();
+
+  assert.match(imagePath ?? "", /^C:\\Temp\\pi-wsl-clipboard-/);
+  assert.deepEqual(runner.calls.map((call) => call.command), ["powershell.exe"]);
+  assert.match(runner.calls[0]?.args.at(-1) ?? "", /Clipboard\]::GetImage/);
 });
