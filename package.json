@@ -7,6 +7,8 @@
     "src",
     "README.md",
     "CHANGELOG.md",
+    "RELEASING.md",
+    "SECURITY.md",
     "LICENSE"
   ],
   "keywords": [
@@ -39,6 +41,14 @@
     "prepublishOnly": "npm run check",
     "pack:dry": "npm pack --dry-run"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alexshpunt/pi-wsl-clipboard.git"
+  },
+  "bugs": {
+    "url": "https://github.com/alexshpunt/pi-wsl-clipboard/issues"
+  },
+  "homepage": "https://github.com/alexshpunt/pi-wsl-clipboard#readme",
   "peerDependencies": {
     "@earendil-works/pi-coding-agent": "*"
   },
